@@ -1,0 +1,105 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "evently-vendor-app",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "evently-vendor-app (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "evently-vendor-app (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "app_ui",
+            "cwd": "packages\\app_ui",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "app_ui (profile mode)",
+            "cwd": "packages\\app_ui",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "app_ui (release mode)",
+            "cwd": "packages\\app_ui",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "booking_repository",
+            "cwd": "packages\\booking_repository",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "business_repository",
+            "cwd": "packages\\business_repository",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "customer_repository",
+            "cwd": "packages\\customer_repository",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "database_client",
+            "cwd": "packages\\database_client",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "env",
+            "cwd": "packages\\env",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "form_fields",
+            "cwd": "packages\\form_fields",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "payment_repository",
+            "cwd": "packages\\payment_repository",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "service_repository",
+            "cwd": "packages\\service_repository",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "authentication_client",
+            "cwd": "packages\\authentication_client\\authentication_client",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "supabase_authentication_client",
+            "cwd": "packages\\authentication_client\\supabase_authentication_client",
+            "request": "launch",
+            "type": "dart"
+        }
+    ]
+}
