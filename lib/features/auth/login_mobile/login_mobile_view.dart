@@ -11,10 +11,20 @@ class LoginMobileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isValid = context.select((LoginMobileViewModel vm) => vm.state.isValid);
-    final phoneNumber = context.select((LoginMobileViewModel vm) => vm.state.phoneNumber);
+    final status = context.select((LoginMobileViewModel vm) => vm.state.status);
 
-    return Scaffold(
-      backgroundColor: EventlyColors.background,
+    return BlocListener<LoginMobileViewModel, LoginMobileState>(
+      listener: (context, state) {
+        if (state.status == LoginMobileStatus.success) {
+          context.push(AppRoutes.loginOtp, extra: '+91 ${state.phoneNumber}');
+        } else if (state.status == LoginMobileStatus.failure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Failed to send verification code. Please try again.')),
+          );
+        }
+      },
+      child: Scaffold(
+        backgroundColor: EventlyColors.background,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -132,23 +142,21 @@ class LoginMobileView extends StatelessWidget {
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      color: EventlyColors.primary.withOpacity(0.1),
+                      color: EventlyColors.primary.withValues(alpha: 0.1),
                       offset: const Offset(0, 4),
                       blurRadius: 12,
                     ),
                   ],
                 ),
                 child: ElevatedButton(
-                  onPressed: isValid
-                      ? () {
-                          context.push(AppRoutes.loginOtp, extra: '+91 $phoneNumber');
-                        }
+                  onPressed: isValid && status != LoginMobileStatus.loading
+                      ? () => context.read<LoginMobileViewModel>().submit()
                       : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: EventlyColors.primary,
                     foregroundColor: Colors.white,
-                    disabledBackgroundColor: EventlyColors.primary.withOpacity(0.5),
-                    disabledForegroundColor: Colors.white.withOpacity(0.8),
+                    disabledBackgroundColor: EventlyColors.primary.withValues(alpha: 0.5),
+                    disabledForegroundColor: Colors.white.withValues(alpha: 0.8),
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -158,7 +166,13 @@ class LoginMobileView extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  child: const Text('Continue'),
+                  child: status == LoginMobileStatus.loading
+                      ? const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                        )
+                      : const Text('Continue'),
                 ),
               ),
               // Footer
@@ -180,6 +194,7 @@ class LoginMobileView extends StatelessWidget {
           ),
         ),
       ),
+    ),
     );
   }
 }

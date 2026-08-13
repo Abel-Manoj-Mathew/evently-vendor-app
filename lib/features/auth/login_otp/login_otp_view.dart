@@ -58,27 +58,37 @@ class _LoginOtpViewState extends State<LoginOtpView> with SingleTickerProviderSt
   Widget build(BuildContext context) {
     final state = context.watch<LoginOtpViewModel>().state;
     final otp = state.otp;
+    final status = state.status;
 
-    // Automatically navigate when 6 digits are entered
-    if (state.isValid) {
+    // Automatically submit when 6 digits are entered
+    if (state.isValid && status == LoginOtpStatus.initial) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        // In a real app, this might trigger a login call instead of immediate routing
-        context.go(AppRoutes.home);
+        context.read<LoginOtpViewModel>().submit(phone: widget.phoneNumber);
       });
     }
-    
+
     final timerText = _secondsRemaining < 10 
         ? '00:0$_secondsRemaining' 
         : '00:$_secondsRemaining';
 
-    return Scaffold(
-      backgroundColor: EventlyColors.background,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return BlocListener<LoginOtpViewModel, LoginOtpState>(
+      listener: (context, state) {
+        if (state.status == LoginOtpStatus.success) {
+          context.go(AppRoutes.home);
+        } else if (state.status == LoginOtpStatus.failure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Invalid code. Please try again.')),
+          );
+        }
+      },
+      child: Scaffold(
+        backgroundColor: EventlyColors.background,
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 16),
                 // Back Button
@@ -172,7 +182,7 @@ class _LoginOtpViewState extends State<LoginOtpView> with SingleTickerProviderSt
                             borderWidth = 2;
                           }
                           if (isActive) {
-                            bgColor = EventlyColors.primary.withOpacity(0.04);
+                            bgColor = EventlyColors.primary.withValues(alpha: 0.04);
                           }
 
                           return Expanded(
@@ -185,17 +195,23 @@ class _LoginOtpViewState extends State<LoginOtpView> with SingleTickerProviderSt
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               alignment: Alignment.center,
-                              child: isFilled
-                                  ? Text(
-                                      otp[index],
-                                      style: const TextStyle(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.w700,
-                                        color: Color(0xFF111827),
-                                      ),
+                              child: status == LoginOtpStatus.loading && index == 5
+                                  ? const SizedBox(
+                                      width: 24,
+                                      height: 24,
+                                      child: CircularProgressIndicator(color: EventlyColors.primary, strokeWidth: 2),
                                     )
-                                  : isActive
-                                      ? FadeTransition(
+                                  : isFilled
+                                      ? Text(
+                                          otp[index],
+                                          style: const TextStyle(
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.w700,
+                                            color: Color(0xFF111827),
+                                          ),
+                                        )
+                                      : isActive
+                                          ? FadeTransition(
                                           opacity: _cursorController,
                                           child: Container(
                                             width: 2,
@@ -272,6 +288,7 @@ class _LoginOtpViewState extends State<LoginOtpView> with SingleTickerProviderSt
           ),
         ),
       ),
+    ),
     );
   }
 }
