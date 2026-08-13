@@ -17,187 +17,210 @@ class LoginView extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Column(
-            children: [
-              const SizedBox(height: 60),
-              // Icon Container
-              Container(
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                  color: EventlyColors.primary.withOpacity(0.08),
-                  border: Border.all(
-                    color: EventlyColors.primary.withOpacity(0.12),
-                  ),
-                  borderRadius: BorderRadius.circular(24),
-                ),
-                child: const Icon(
-                  Icons.bolt,
-                  color: EventlyColors.primary,
-                  size: 36,
-                ),
-              ),
-              const SizedBox(height: 12),
-              // App Name
-              const Text(
-                'E V E N T L Y',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFF111827),
-                  letterSpacing: 0.4,
-                ),
-              ),
-              const SizedBox(height: 32),
-              // Title
-              const Text(
-                'Manage your event business effortlessly',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFF111827),
-                  height: 1.35,
-                ),
-              ),
-              const SizedBox(height: 12),
-              // Subtitle
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: Text(
-                  'Create bookings, manage customers, track services, and organize every event from one place.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    color: Color(0xFF6B7280),
-                    height: 1.65,
-                  ),
-                ),
-              ),
-              const Spacer(),
-              // Buttons and Footer
-              if (status == LoginStatus.loading)
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 56),
-                  child: CircularProgressIndicator(
-                    color: EventlyColors.primary,
-                  ),
-                )
-              else
+          child: SizedBox.expand(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Spacer(flex: 2),
+                // Top Header Section
                 Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Primary Button
-                    SizedBox(
-                      width: double.infinity,
-                      height: 52,
-                      child: ElevatedButton(
-                        onPressed: () => context.push(AppRoutes.loginMobile),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: EventlyColors.primary,
-                          foregroundColor: Colors.white,
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          textStyle: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        child: const Text('Continue with Mobile Number'),
+                    Container(
+                      width: 56,
+                      height: 56,
+                      decoration: BoxDecoration(
+                        color: const Color(0x14FF4040), // rgba(255, 64, 64, 0.08)
+                        borderRadius: BorderRadius.circular(14),
                       ),
-                    ),
-                    const SizedBox(height: 28),
-                    // OR Divider
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            height: 1,
-                            color: const Color(0xFFE5E7EB),
-                          ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 12),
-                          child: Text(
-                            'OR',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400,
-                              color: Color(0xFF9CA3AF),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Container(
-                            height: 1,
-                            color: const Color(0xFFE5E7EB),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 28),
-                    // Secondary Button
-                    SizedBox(
-                      width: double.infinity,
-                      height: 52,
-                      child: OutlinedButton.icon(
-                        onPressed: () {
-                          // Handle Google Login
-                        },
-                        icon: const Icon(
-                          Icons.mail_outline,
-                          color: EventlyColors.primary,
-                          size: 18,
-                        ),
-                        label: const Text('Continue with Google'),
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: const Color(0xFF111827),
-                          side: const BorderSide(color: Color(0xFFE5E7EB)),
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          textStyle: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
+                      child: Center(
+                        child: SizedBox(
+                          width: 28,
+                          height: 28,
+                          child: CustomPaint(
+                            painter: _ZapIconPainter(color: const Color(0xFFFF4040)),
                           ),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 32),
-                    // Footer
-                    const Text.rich(
-                      TextSpan(
-                        text: 'By continuing, you agree to\n',
-                        children: [
-                          TextSpan(
-                            text: 'Terms of Service',
-                            style: TextStyle(decoration: TextDecoration.underline),
-                          ),
-                          TextSpan(text: ' and '),
-                          TextSpan(
-                            text: 'Privacy Policy',
-                            style: TextStyle(decoration: TextDecoration.underline),
-                          ),
-                        ],
+                    const SizedBox(height: 12),
+                    const Text(
+                      'E V E N T L Y',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF111827),
+                        letterSpacing: 2.4,
+                        height: 1.2,
                       ),
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w400,
-                        color: Color(0xFF6B7280),
-                        height: 1.7,
-                      ),
                     ),
-                    const SizedBox(height: 56),
                   ],
                 ),
-            ],
+                const SizedBox(height: 32),
+                // Middle Content Section
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 310),
+                      child: const Text(
+                        'Manage your event business effortlessly',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF111827),
+                          height: 1.36,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 320),
+                      child: const Text(
+                        'Create bookings, manage customers, track services, and organize every event from one place.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w400,
+                          color: Color(0xFF667085),
+                          height: 1.6,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 36),
+                // Action Section (Button & Terms text centered in middle layout)
+                if (status == LoginStatus.loading)
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 24),
+                    child: CircularProgressIndicator(
+                      color: Color(0xFFFF4040),
+                    ),
+                  )
+                else
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        width: double.infinity,
+                        height: 54,
+                        child: ElevatedButton(
+                          onPressed: () => context.push(AppRoutes.loginMobile),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFFF4040),
+                            foregroundColor: Colors.white,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            textStyle: const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          child: const Text('Continue with Mobile Number'),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 300),
+                        child: const Text.rich(
+                          TextSpan(
+                            text: 'By continuing, you agree to ',
+                            children: [
+                              TextSpan(
+                                text: 'Terms of Service',
+                                style: TextStyle(decoration: TextDecoration.underline),
+                              ),
+                              TextSpan(text: ' and '),
+                              TextSpan(
+                                text: 'Privacy Policy',
+                                style: TextStyle(decoration: TextDecoration.underline),
+                              ),
+                              TextSpan(text: '.'),
+                            ],
+                          ),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            color: Color(0xFF667085),
+                            height: 1.5,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                const Spacer(flex: 3),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
+}
+
+class _ZapIconPainter extends CustomPainter {
+  const _ZapIconPainter({required this.color});
+
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = size.width * (1.714 / 24)
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round;
+
+    final scaleX = size.width / 24;
+    final scaleY = size.height / 24;
+
+    final path = Path();
+    path.moveTo(4 * scaleX, 14 * scaleY);
+    path.arcToPoint(
+      Offset(3.22 * scaleX, 12.37 * scaleY),
+      radius: Radius.circular(1 * scaleX),
+      clockwise: false,
+    );
+    path.lineTo(13.12 * scaleX, 2.17 * scaleY);
+    path.arcToPoint(
+      Offset(13.98 * scaleX, 2.63 * scaleY),
+      radius: Radius.circular(0.5 * scaleX),
+    );
+    path.lineTo(12.06 * scaleX, 8.65 * scaleY);
+    path.arcToPoint(
+      Offset(13 * scaleX, 10 * scaleY),
+      radius: Radius.circular(1 * scaleX),
+    );
+    path.lineTo(20 * scaleX, 10 * scaleY);
+    path.arcToPoint(
+      Offset(20.78 * scaleX, 11.63 * scaleY),
+      radius: Radius.circular(1 * scaleX),
+    );
+    path.lineTo(10.88 * scaleX, 21.83 * scaleY);
+    path.arcToPoint(
+      Offset(10.02 * scaleX, 21.37 * scaleY),
+      radius: Radius.circular(0.5 * scaleX),
+      clockwise: false,
+    );
+    path.lineTo(11.94 * scaleX, 15.35 * scaleY);
+    path.arcToPoint(
+      Offset(11 * scaleX, 14 * scaleY),
+      radius: Radius.circular(1 * scaleX),
+    );
+    path.close();
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant _ZapIconPainter oldDelegate) =>
+      oldDelegate.color != color;
 }
