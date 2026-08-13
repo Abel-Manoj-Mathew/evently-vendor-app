@@ -141,7 +141,9 @@ class LoginMobileView extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: isValid
                       ? () {
-                          context.push(AppRoutes.loginOtp, extra: '+91 $phoneNumber');
+                          context.push(
+                            '${AppRoutes.loginOtp}?phone=${Uri.encodeComponent('+91 $phoneNumber')}',
+                          );
                         }
                       : null,
                   style: ElevatedButton.styleFrom(

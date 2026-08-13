@@ -56,22 +56,19 @@ class _LoginOtpViewState extends State<LoginOtpView> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<LoginOtpViewModel>().state;
-    final otp = state.otp;
+    return BlocListener<LoginOtpViewModel, LoginOtpState>(
+      listenWhen: (previous, current) => !previous.isValid && current.isValid,
+      listener: (context, state) {
+        context.go(AppRoutes.addName);
+      },
+      child: BlocBuilder<LoginOtpViewModel, LoginOtpState>(
+        builder: (context, state) {
+          final otp = state.otp;
+          final timerText = _secondsRemaining < 10
+              ? '00:0$_secondsRemaining'
+              : '00:$_secondsRemaining';
 
-    // Automatically navigate when 6 digits are entered
-    if (state.isValid) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        // In a real app, this might trigger a login call instead of immediate routing
-        context.go(AppRoutes.home);
-      });
-    }
-    
-    final timerText = _secondsRemaining < 10 
-        ? '00:0$_secondsRemaining' 
-        : '00:$_secondsRemaining';
-
-    return Scaffold(
+          return Scaffold(
       backgroundColor: EventlyColors.background,
       body: SafeArea(
         child: SingleChildScrollView(
@@ -271,6 +268,9 @@ class _LoginOtpViewState extends State<LoginOtpView> with SingleTickerProviderSt
             ),
           ),
         ),
+      ),
+    );
+        },
       ),
     );
   }

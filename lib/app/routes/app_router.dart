@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:evently_vendor_app/app/routes/app_routes.dart';
+import 'package:evently_vendor_app/features/auth/add_name/add_name_generator.dart';
+import 'package:evently_vendor_app/features/auth/business_details/business_details_generator.dart';
 import 'package:evently_vendor_app/features/auth/login/login_generator.dart';
 import 'package:evently_vendor_app/features/auth/login_mobile/login_mobile_generator.dart';
 import 'package:evently_vendor_app/features/auth/login_otp/login_otp_generator.dart';
@@ -19,9 +21,17 @@ final appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.loginOtp,
       builder: (context, state) {
-        final phoneNumber = state.extra as String? ?? '';
+        final phoneNumber = state.uri.queryParameters['phone'] ?? '';
         return LoginOtpGenerator(phoneNumber: phoneNumber);
       },
+    ),
+    GoRoute(
+      path: AppRoutes.addName,
+      builder: (context, state) => const AddNameGenerator(),
+    ),
+    GoRoute(
+      path: AppRoutes.businessDetails,
+      builder: (context, state) => const BusinessDetailsGenerator(),
     ),
     GoRoute(
       path: AppRoutes.home,
