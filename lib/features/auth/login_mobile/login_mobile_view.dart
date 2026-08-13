@@ -11,123 +11,171 @@ class LoginMobileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isValid = context.select((LoginMobileViewModel vm) => vm.state.isValid);
+    final phoneNumber = context.select((LoginMobileViewModel vm) => vm.state.phoneNumber);
 
     return Scaffold(
       backgroundColor: EventlyColors.background,
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, size: 20),
-          onPressed: () => context.pop(),
-        ),
-      ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 16),
-              const Text(
-                'Enter your mobile number',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFF111827),
-                  height: 1.35,
+              // Back Button
+              Padding(
+                padding: const EdgeInsets.only(top: 16, bottom: 12),
+                child: SizedBox(
+                  width: 40,
+                  height: 40,
+                  child: IconButton(
+                    padding: EdgeInsets.zero,
+                    icon: const Icon(Icons.arrow_back, color: Color(0xFF111827), size: 20),
+                    onPressed: () => context.pop(),
+                  ),
                 ),
               ),
-              const SizedBox(height: 8),
-              const Text(
-                'We will send you a verification code to sign in.',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  color: Color(0xFF6B7280),
-                  height: 1.5,
+              const Padding(
+                padding: EdgeInsets.only(top: 40),
+                child: Text(
+                  'Enter your mobile number',
+                  style: TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF111827),
+                    height: 1.3,
+                  ),
                 ),
               ),
-              const SizedBox(height: 32),
+              const Padding(
+                padding: EdgeInsets.only(top: 12),
+                child: Text(
+                  'We\'ll send you a verification code to continue.',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xFF6B7280),
+                    height: 1.6,
+                  ),
+                ),
+              ),
               // Phone Input Field
               Container(
+                height: 56,
+                margin: const EdgeInsets.only(top: 32),
                 decoration: BoxDecoration(
+                  color: Colors.white,
                   border: Border.all(color: const Color(0xFFE5E7EB)),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
                   children: [
                     // Country Code Dropdown (Mockup)
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      height: double.infinity,
+                      padding: const EdgeInsets.only(left: 16, right: 12),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFFAFAFA),
+                        border: Border(
+                          right: BorderSide(color: Color(0xFFE5E7EB)),
+                        ),
+                        borderRadius: BorderRadius.horizontal(
+                          left: Radius.circular(11), // 12 - 1 for border
+                        ),
+                      ),
                       child: Row(
                         children: const [
                           Text(
-                            '+1',
+                            '+91',
                             style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
                               color: Color(0xFF111827),
                             ),
                           ),
-                          SizedBox(width: 4),
-                          Icon(Icons.keyboard_arrow_down, size: 20, color: Color(0xFF6B7280)),
+                          SizedBox(width: 6),
+                          Icon(Icons.keyboard_arrow_down, size: 14, color: Color(0xFF9CA3AF)),
                         ],
                       ),
                     ),
-                    Container(width: 1, height: 24, color: const Color(0xFFE5E7EB)),
                     Expanded(
-                      child: TextField(
-                        keyboardType: TextInputType.phone,
-                        onChanged: (val) => context.read<LoginMobileViewModel>().onPhoneChanged(val),
-                        decoration: const InputDecoration(
-                          hintText: 'Phone number',
-                          hintStyle: TextStyle(
-                            color: Color(0xFF9CA3AF),
-                            fontSize: 16,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: TextField(
+                          keyboardType: TextInputType.phone,
+                          onChanged: (val) => context.read<LoginMobileViewModel>().onPhoneChanged(val),
+                          decoration: const InputDecoration(
+                            hintText: 'Mobile Number',
+                            hintStyle: TextStyle(
+                              color: Color(0xFF9CA3AF),
+                              fontSize: 15,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.zero,
                           ),
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                        ),
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xFF111827),
+                          style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF111827),
+                          ),
                         ),
                       ),
                     ),
                   ],
                 ),
               ),
-              const Spacer(),
               // Primary Button
-              Padding(
-                padding: const EdgeInsets.only(bottom: 56),
-                child: SizedBox(
-                  width: double.infinity,
-                  height: 52,
-                  child: ElevatedButton(
-                    onPressed: isValid
-                        ? () {
-                            context.push(AppRoutes.loginOtp);
-                          }
-                        : null,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: EventlyColors.primary,
-                      foregroundColor: Colors.white,
-                      disabledBackgroundColor: EventlyColors.primary.withOpacity(0.5),
-                      disabledForegroundColor: Colors.white.withOpacity(0.8),
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      textStyle: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                      ),
+              Container(
+                margin: const EdgeInsets.only(top: 24),
+                width: double.infinity,
+                height: 56,
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: EventlyColors.primary.withOpacity(0.1),
+                      offset: const Offset(0, 4),
+                      blurRadius: 12,
                     ),
-                    child: const Text('Send Code'),
+                  ],
+                ),
+                child: ElevatedButton(
+                  onPressed: isValid
+                      ? () {
+                          context.push(AppRoutes.loginOtp, extra: '+91 $phoneNumber');
+                        }
+                      : null,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: EventlyColors.primary,
+                    foregroundColor: Colors.white,
+                    disabledBackgroundColor: EventlyColors.primary.withOpacity(0.5),
+                    disabledForegroundColor: Colors.white.withOpacity(0.8),
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    textStyle: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  child: const Text('Continue'),
+                ),
+              ),
+              // Footer
+              const Padding(
+                padding: EdgeInsets.only(top: 16),
+                child: Center(
+                  child: Text(
+                    'We\'ll only use this number for verification.',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xFF9CA3AF),
+                    ),
                   ),
                 ),
               ),
+              const Spacer(),
             ],
           ),
         ),

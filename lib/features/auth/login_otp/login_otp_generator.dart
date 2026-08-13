@@ -4,13 +4,15 @@ import 'package:evently_vendor_app/features/auth/login_otp/login_otp_view.dart';
 import 'package:evently_vendor_app/features/auth/login_otp/login_otp_view_model.dart';
 
 class LoginOtpGenerator extends StatelessWidget {
-  const LoginOtpGenerator({super.key});
+  const LoginOtpGenerator({super.key, this.phoneNumber = ''});
+  
+  final String phoneNumber;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => LoginOtpViewModel(),
-      child: const LoginOtpView(),
+      child: LoginOtpView(phoneNumber: phoneNumber),
     );
   }
 }
