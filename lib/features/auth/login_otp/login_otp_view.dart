@@ -9,7 +9,7 @@ import 'package:go_router/go_router.dart';
 
 class LoginOtpView extends StatefulWidget {
   const LoginOtpView({super.key, this.phoneNumber = ''});
-  
+
   final String phoneNumber;
 
   @override
@@ -30,10 +30,10 @@ class _LoginOtpViewState extends State<LoginOtpView> with SingleTickerProviderSt
       vsync: this,
       duration: const Duration(milliseconds: 600),
     )..repeat(reverse: true);
-    
+
     _startTimer();
   }
-  
+
   void _startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_secondsRemaining > 0) {
@@ -57,219 +57,239 @@ class _LoginOtpViewState extends State<LoginOtpView> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     return BlocListener<LoginOtpViewModel, LoginOtpState>(
-      listenWhen: (previous, current) => !previous.isValid && current.isValid,
+      listenWhen: (previous, current) => previous.status != current.status,
       listener: (context, state) {
-        context.go(AppRoutes.addName);
+        if (state.status == LoginOtpStatus.success) {
+          context.go(AppRoutes.addName);
+        } else if (state.status == LoginOtpStatus.failure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Invalid code. Please try again.')),
+          );
+        }
       },
       child: BlocBuilder<LoginOtpViewModel, LoginOtpState>(
         builder: (context, state) {
           final otp = state.otp;
+          final status = state.status;
           final timerText = _secondsRemaining < 10
               ? '00:0$_secondsRemaining'
               : '00:$_secondsRemaining';
 
-          return Scaffold(
-      backgroundColor: EventlyColors.background,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 16),
-                // Back Button
-                SizedBox(
-                  width: 40,
-                  height: 40,
-                  child: IconButton(
-                    padding: EdgeInsets.zero,
-                    icon: const Icon(Icons.arrow_back, color: Color(0xFF111827), size: 20),
-                    onPressed: () => context.pop(),
-                  ),
-                ),
-                const SizedBox(height: 24),
-                // Titles
-                const Text(
-                  'Verify your number',
-                  style: TextStyle(
-                    fontSize: 26,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF111827),
-                    height: 1.3,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  'Enter the 6-digit verification code sent to your mobile number.',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    color: Color(0xFF6B7280),
-                    height: 1.6,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                // Sent To Info
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'SENT TO',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF9CA3AF),
-                        letterSpacing: 0.6,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      widget.phoneNumber.isNotEmpty ? widget.phoneNumber : '+91 98765 43210',
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF111827),
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    GestureDetector(
-                      onTap: () => context.pop(),
-                      child: const Text(
-                        'Change Number',
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: EventlyColors.primary,
-                          decoration: TextDecoration.underline,
-                          decorationColor: EventlyColors.primary,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 36),
-                // OTP Input Boxes
-                Center(
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: List.generate(6, (index) {
-                          final isFilled = index < otp.length;
-                          final isActive = _focusNode.hasFocus && index == otp.length;
-                          
-                          Color borderColor = const Color(0xFFE5E7EB);
-                          double borderWidth = 1;
-                          Color bgColor = Colors.white;
-                          
-                          if (isFilled || isActive) {
-                            borderColor = EventlyColors.primary;
-                            borderWidth = 2;
-                          }
-                          if (isActive) {
-                            bgColor = EventlyColors.primary.withOpacity(0.04);
-                          }
+          // Automatically submit when 6 digits are entered
+          if (state.isValid && status == LoginOtpStatus.initial) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              context.read<LoginOtpViewModel>().submit(phone: widget.phoneNumber);
+            });
+          }
 
-                          return Expanded(
-                            child: Container(
-                              margin: EdgeInsets.only(right: index == 5 ? 0 : 8),
-                              height: 56,
-                              decoration: BoxDecoration(
-                                color: bgColor,
-                                border: Border.all(color: borderColor, width: borderWidth),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              alignment: Alignment.center,
-                              child: isFilled
-                                  ? Text(
-                                      otp[index],
-                                      style: const TextStyle(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.w700,
-                                        color: Color(0xFF111827),
-                                      ),
-                                    )
-                                  : isActive
-                                      ? FadeTransition(
-                                          opacity: _cursorController,
-                                          child: Container(
-                                            width: 2,
-                                            height: 28,
-                                            color: EventlyColors.primary,
-                                          ),
-                                        )
-                                      : null,
-                            ),
-                          );
-                        }),
-                      ),
-                      Positioned.fill(
-                        child: TextField(
-                          focusNode: _focusNode,
-                          autofocus: true,
-                          keyboardType: TextInputType.number,
-                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                          maxLength: 6,
-                          onChanged: (val) => context.read<LoginOtpViewModel>().onOtpChanged(val),
-                          style: const TextStyle(color: Colors.transparent),
-                          cursorColor: Colors.transparent,
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                            counterText: '',
-                          ),
+          return Scaffold(
+            backgroundColor: EventlyColors.background,
+            body: SafeArea(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 16),
+                      // Back Button
+                      SizedBox(
+                        width: 40,
+                        height: 40,
+                        child: IconButton(
+                          padding: EdgeInsets.zero,
+                          icon: const Icon(Icons.arrow_back, color: Color(0xFF111827), size: 20),
+                          onPressed: () => context.pop(),
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 40),
-                // Timer and Info
-                Center(
-                  child: Column(
-                    children: [
+                      const SizedBox(height: 24),
+                      // Titles
                       const Text(
-                        'RESEND AVAILABLE IN',
+                        'Verify your number',
                         style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF9CA3AF),
-                          letterSpacing: 0.6,
+                          fontSize: 26,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF111827),
+                          height: 1.3,
                         ),
                       ),
                       const SizedBox(height: 8),
-                      Text(
-                        timerText,
-                        style: const TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFF111827),
-                          letterSpacing: 0.6,
-                          height: 1,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
                       const Text(
-                        'Verification starts automatically after entering all 6 digits.',
-                        textAlign: TextAlign.center,
+                        'Enter the 6-digit verification code sent to your mobile number.',
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 14,
                           fontWeight: FontWeight.w400,
                           color: Color(0xFF6B7280),
-                          height: 1.5,
+                          height: 1.6,
                         ),
                       ),
+                      const SizedBox(height: 24),
+                      // Sent To Info
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'SENT TO',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFF9CA3AF),
+                              letterSpacing: 0.6,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            widget.phoneNumber.isNotEmpty ? widget.phoneNumber : '+91 98765 43210',
+                            style: const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF111827),
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          GestureDetector(
+                            onTap: () => context.pop(),
+                            child: const Text(
+                              'Change Number',
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: EventlyColors.primary,
+                                decoration: TextDecoration.underline,
+                                decorationColor: EventlyColors.primary,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 36),
+                      // OTP Input Boxes
+                      Center(
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: List.generate(6, (index) {
+                                final isFilled = index < otp.length;
+                                final isActive = _focusNode.hasFocus && index == otp.length;
+
+                                Color borderColor = const Color(0xFFE5E7EB);
+                                double borderWidth = 1;
+                                Color bgColor = Colors.white;
+
+                                if (isFilled || isActive) {
+                                  borderColor = EventlyColors.primary;
+                                  borderWidth = 2;
+                                }
+                                if (isActive) {
+                                  bgColor = EventlyColors.primary.withValues(alpha: 0.04);
+                                }
+
+                                return Expanded(
+                                  child: Container(
+                                    margin: EdgeInsets.only(right: index == 5 ? 0 : 8),
+                                    height: 56,
+                                    decoration: BoxDecoration(
+                                      color: bgColor,
+                                      border: Border.all(color: borderColor, width: borderWidth),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    alignment: Alignment.center,
+                                    child: status == LoginOtpStatus.loading && index == 5
+                                        ? const SizedBox(
+                                            width: 24,
+                                            height: 24,
+                                            child: CircularProgressIndicator(color: EventlyColors.primary, strokeWidth: 2),
+                                          )
+                                        : isFilled
+                                            ? Text(
+                                                otp[index],
+                                                style: const TextStyle(
+                                                  fontSize: 22,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: Color(0xFF111827),
+                                                ),
+                                              )
+                                            : isActive
+                                                ? FadeTransition(
+                                                    opacity: _cursorController,
+                                                    child: Container(
+                                                      width: 2,
+                                                      height: 28,
+                                                      color: EventlyColors.primary,
+                                                    ),
+                                                  )
+                                                : null,
+                                  ),
+                                );
+                              }),
+                            ),
+                            Positioned.fill(
+                              child: TextField(
+                                focusNode: _focusNode,
+                                autofocus: true,
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                maxLength: 6,
+                                onChanged: (val) => context.read<LoginOtpViewModel>().onOtpChanged(val),
+                                style: const TextStyle(color: Colors.transparent),
+                                cursorColor: Colors.transparent,
+                                decoration: const InputDecoration(
+                                  border: InputBorder.none,
+                                  counterText: '',
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 40),
+                      // Timer and Info
+                      Center(
+                        child: Column(
+                          children: [
+                            const Text(
+                              'RESEND AVAILABLE IN',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFF9CA3AF),
+                                letterSpacing: 0.6,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              timerText,
+                              style: const TextStyle(
+                                fontSize: 32,
+                                fontWeight: FontWeight.w700,
+                                color: Color(0xFF111827),
+                                letterSpacing: 0.6,
+                                height: 1,
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            const Text(
+                              'Verification starts automatically after entering all 6 digits.',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                color: Color(0xFF6B7280),
+                                height: 1.5,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 24),
                     ],
                   ),
                 ),
-                const SizedBox(height: 24),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
-    );
+          );
         },
       ),
     );

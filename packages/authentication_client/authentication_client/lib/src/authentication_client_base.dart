@@ -1,6 +1,4 @@
-// TODO: Put public facing types in this file.
-
-/// Checks if you are awesome. Spoiler: you are.
-class Awesome {
-  bool get isAwesome => true;
+abstract class AuthenticationClient {
+  Future<void> signInWithOtp({required String phone});
+  Future<void> verifyOtp({required String phone, required String token});
 }
