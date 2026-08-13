@@ -11,6 +11,7 @@ class App extends StatelessWidget {
       title: 'Evently Vendor App',
       theme: EventlyTheme.theme,
       routerConfig: appRouter,
+      debugShowCheckedModeBanner: false,
     );
   }
 }
