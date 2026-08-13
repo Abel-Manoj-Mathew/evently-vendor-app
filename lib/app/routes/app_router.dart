@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:evently_vendor_app/app/routes/app_routes.dart';
+import 'package:evently_vendor_app/features/splash/splash_generator.dart';
 import 'package:evently_vendor_app/features/auth/login/login_generator.dart';
 
 final appRouter = GoRouter(
-  initialLocation: AppRoutes.login,
+  initialLocation: AppRoutes.splash,
   routes: [
+    GoRoute(
+      path: AppRoutes.splash,
+      builder: (context, state) => const SplashGenerator(),
+    ),
     GoRoute(
       path: AppRoutes.login,
       builder: (context, state) => const LoginGenerator(),
@@ -18,3 +23,4 @@ final appRouter = GoRouter(
     ),
   ],
 );
+

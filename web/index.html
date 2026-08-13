@@ -31,16 +31,120 @@
 
   <title>evently_vendor_app</title>
   <link rel="manifest" href="manifest.json">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #ffffff;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .splash-container {
+      width: 100%;
+      max-width: 375px;
+      height: 100vh;
+      min-height: 812px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      box-sizing: border-box;
+    }
+    .splash-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      padding: 0 40px;
+    }
+    .icon-box {
+      width: 104px;
+      height: 104px;
+      border-radius: 16px;
+      background: rgba(255, 64, 64, 0.05);
+      border: 1px solid rgba(255, 64, 64, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .splash-title {
+      font-size: 28px;
+      font-weight: 600;
+      color: #111827;
+      text-align: center;
+      letter-spacing: 0.08em;
+      margin: 0;
+      text-transform: uppercase;
+    }
+    .splash-subtitle {
+      font-size: 15px;
+      font-weight: 400;
+      color: #6b7280;
+      text-align: center;
+      line-height: 1.6;
+      max-width: 220px;
+      margin: 0;
+    }
+    .splash-footer {
+      padding-bottom: 64px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .progress-bar {
+      width: 160px;
+      height: 3px;
+      border-radius: 2px;
+      background: #e5e7eb;
+      overflow: hidden;
+    }
+    .progress-fill {
+      width: 40%;
+      height: 100%;
+      background: #ff4040;
+      animation: splash-progress 2s ease-in-out infinite;
+    }
+    @keyframes splash-progress {
+      0% { width: 10%; }
+      50% { width: 70%; }
+      100% { width: 100%; }
+    }
+    .loading-text {
+      font-size: 12px;
+      font-weight: 400;
+      color: #9ca3af;
+      letter-spacing: 0.02em;
+    }
+  </style>
 </head>
 <body>
-  <!--
-    You can customize the "flutter_bootstrap.js" script.
-    This is useful to provide a custom configuration to the Flutter loader
-    or to give the user feedback during the initialization process.
-
-    For more details:
-    * https://docs.flutter.dev/platform-integration/web/initialization
-  -->
+  <div class="splash-container">
+    <div style="flex: 1 1 0"></div>
+    <div class="splash-main">
+      <div class="icon-box">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ff4040" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2">
+          <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"></path>
+        </svg>
+      </div>
+      <h1 class="splash-title">E V E N T L Y</h1>
+      <p class="splash-subtitle">Manage your event business in one place.</p>
+    </div>
+    <div style="flex: 1 1 0"></div>
+    <div class="splash-footer">
+      <div class="progress-bar">
+        <div class="progress-fill"></div>
+      </div>
+      <span class="loading-text">Loading...</span>
+    </div>
+  </div>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>
+
