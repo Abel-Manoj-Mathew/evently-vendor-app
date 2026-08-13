@@ -3,12 +3,23 @@ import 'package:go_router/go_router.dart';
 import 'package:evently_vendor_app/app/routes/app_routes.dart';
 import 'package:evently_vendor_app/features/auth/login/login_generator.dart';
 
+import 'package:evently_vendor_app/features/auth/login_mobile/login_mobile_generator.dart';
+import 'package:evently_vendor_app/features/auth/login_otp/login_otp_generator.dart';
+
 final appRouter = GoRouter(
   initialLocation: AppRoutes.login,
   routes: [
     GoRoute(
       path: AppRoutes.login,
       builder: (context, state) => const LoginGenerator(),
+    ),
+    GoRoute(
+      path: AppRoutes.loginMobile,
+      builder: (context, state) => const LoginMobileGenerator(),
+    ),
+    GoRoute(
+      path: AppRoutes.loginOtp,
+      builder: (context, state) => const LoginOtpGenerator(),
     ),
     GoRoute(
       path: AppRoutes.home,
